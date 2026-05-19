@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CareerForge – Placement Preparation Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --border: #2a2a3a;
+      --accent: #ff6b35;
+      --accent2: #7c5cbf;
+      --accent3: #00d4a1;
+      --text: #e8e8f0;
+      --muted: #7878a0;
+      --glow: rgba(255,107,53,0.15);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(10,10,15,0.8);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.4rem;
+      color: var(--text);
+      letter-spacing: -0.03em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.78rem; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #fff;
+      border: none; padding: 0.6rem 1.4rem;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 0.82rem; letter-spacing: 0.06em;
+      cursor: pointer; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 8rem 4rem 4rem;
+      overflow: hidden;
+    }
+    .hero-grid-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+      opacity: 0.3;
+    }
+    .hero-glow {
+      position: absolute; z-index: 0;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%);
+      top: -150px; left: -150px; pointer-events: none;
+    }
+    .hero-glow2 {
+      position: absolute; z-index: 0;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(124,92,191,0.1) 0%, transparent 70%);
+      bottom: -100px; right: 100px; pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 820px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.3);
+      color: var(--accent); padding: 0.4rem 1rem;
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-eyebrow::before { content: '◆'; font-size: 0.5rem; }
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: clamp(3rem, 7vw, 6.5rem);
+      line-height: 0.95; letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .hero-title .line2 {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic; font-weight: 400;
+      color: var(--accent);
+    }
+    .hero-title .line3 { color: var(--muted); }
+    .hero-sub {
+      font-size: 0.95rem; line-height: 1.8;
+      color: var(--muted); max-width: 520px;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-actions {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      border: none; padding: 0.9rem 2.2rem;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 0.9rem; cursor: pointer;
+      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+    .btn-secondary {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border); padding: 0.9rem 2.2rem;
+      font-family: 'Syne', sans-serif; font-weight: 600;
+      font-size: 0.9rem; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); background: var(--glow); }
+
+    .hero-stats {
+      position: absolute; right: 4rem; top: 50%;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 1.2rem;
+      z-index: 1;
+      animation: fadeLeft 0.8s 0.4s ease both;
+    }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 1.2rem 1.8rem; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 2px; background: var(--accent);
+    }
+    .stat-num {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 2rem; color: var(--text);
+      display: block;
+    }
+    .stat-label { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* ── SECTIONS ── */
+    section { position: relative; z-index: 1; }
+    .section-inner { max-width: 1200px; margin: 0 auto; padding: 5rem 4rem; }
+    .section-tag {
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .section-title em {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic; font-weight: 400;
+      color: var(--accent);
+    }
+    .section-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.8; max-width: 480px; }
+
+    /* ── FEATURES ── */
+    .features-bg { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px;
+      background: var(--border); margin-top: 4rem;
+      border: 1px solid var(--border);
+    }
+    .feature-card {
+      background: var(--card); padding: 2.5rem;
+      transition: background 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .feature-card:hover { background: #1c1c28; }
+    .feature-card::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover::after { transform: scaleX(1); }
+    .feat-icon {
+      width: 48px; height: 48px;
+      background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1.5rem;
+    }
+    .feat-title {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 1.05rem; margin-bottom: 0.7rem;
+    }
+    .feat-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.7; }
+
+    /* ── TOPICS ── */
+    .topics-header {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end;
+      margin-bottom: 4rem;
+    }
+    .topics-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    }
+    .topic-pill {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 1.4rem 1.2rem; cursor: pointer;
+      transition: all 0.2s; position: relative;
+    }
+    .topic-pill:hover {
+      border-color: var(--accent); transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(255,107,53,0.1);
+    }
+    .topic-pill.hot { border-color: rgba(255,107,53,0.4); }
+    .topic-badge {
+      position: absolute; top: 0.7rem; right: 0.7rem;
+      font-size: 0.6rem; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--accent); color: #fff;
+      padding: 0.2rem 0.5rem;
+    }
+    .topic-icon { font-size: 1.5rem; margin-bottom: 0.8rem; }
+    .topic-name {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 0.85rem; margin-bottom: 0.3rem;
+    }
+    .topic-count { font-size: 0.72rem; color: var(--muted); }
+
+    /* ── ROADMAP ── */
+    .roadmap-bg { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .roadmap-wrapper { display: grid; grid-template-columns: 1fr 2fr; gap: 5rem; align-items: start; }
+    .roadmap-steps { display: flex; flex-direction: column; gap: 0; margin-top: 1rem; }
+    .step {
+      display: flex; gap: 1.5rem; padding: 1.8rem 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: background 0.2s;
+      position: relative;
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      width: 36px; height: 36px; flex-shrink: 0;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.8rem;
+      color: var(--muted); transition: all 0.2s;
+    }
+    .step.active .step-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .step-info { flex: 1; }
+    .step-title {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem;
+      margin-bottom: 0.3rem; transition: color 0.2s;
+    }
+    .step.active .step-title { color: var(--accent); }
+    .step-sub { font-size: 0.78rem; color: var(--muted); }
+    .step-duration { font-size: 0.7rem; color: var(--accent2); margin-top: 0.3rem; }
+
+    .roadmap-visual {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 2.5rem; margin-top: 1rem;
+    }
+    .rv-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    .rv-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; }
+    .rv-badge { background: rgba(0,212,161,0.1); border: 1px solid rgba(0,212,161,0.3); color: var(--accent3); font-size: 0.7rem; padding: 0.3rem 0.7rem; }
+    .progress-item { margin-bottom: 1.5rem; }
+    .pi-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.78rem; }
+    .pi-label { color: var(--muted); }
+    .pi-val { color: var(--text); }
+    .prog-bar { height: 4px; background: var(--border); position: relative; overflow: hidden; }
+    .prog-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 1s ease; }
+    .rv-checklist { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
+    .check-item { display: flex; align-items: center; gap: 0.8rem; font-size: 0.82rem; }
+    .check-item .ck { width: 18px; height: 18px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; }
+    .check-item.done .ck { background: var(--accent3); border-color: var(--accent3); color: #000; }
+    .check-item.done .ct { color: var(--muted); text-decoration: line-through; }
+
+    /* ── COMPANIES ── */
+    .companies-strip {
+      padding: 3rem 4rem;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .cs-label { text-align: center; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 2rem; }
+    .marquee-wrap { overflow: hidden; mask-image: linear-gradient(90deg, transparent, black 15%, black 85%, transparent); }
+    .marquee { display: flex; gap: 3rem; animation: marquee 25s linear infinite; }
+    .company-name {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 1.1rem; color: var(--border);
+      white-space: nowrap; letter-spacing: 0.06em;
+      transition: color 0.3s;
+    }
+    .company-name:hover { color: var(--muted); }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3.5rem; }
+    .testi-card {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 2rem; position: relative;
+    }
+    .testi-quote {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic; font-size: 1.05rem; line-height: 1.7;
+      color: var(--text); margin-bottom: 1.5rem;
+    }
+    .testi-quote::before { content: '"'; color: var(--accent); font-size: 2rem; line-height: 0; vertical-align: -0.6rem; margin-right: 0.2rem; }
+    .testi-author { display: flex; align-items: center; gap: 0.8rem; }
+    .testi-avatar {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.85rem;
+      color: #fff; flex-shrink: 0;
+    }
+    .testi-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; }
+    .testi-role { font-size: 0.72rem; color: var(--muted); }
+    .testi-company { font-size: 0.72rem; color: var(--accent); }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      background: var(--surface); border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .cta-inner { max-width: 700px; margin: 0 auto; padding: 7rem 2rem; }
+    .cta-title {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(2.5rem, 5vw, 4rem); letter-spacing: -0.04em;
+      margin-bottom: 1.2rem;
+    }
+    .cta-title em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--accent); }
+    .cta-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.8; margin-bottom: 2.5rem; }
+    .cta-btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-large {
+      padding: 1rem 2.8rem; font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 0.95rem; cursor: pointer;
+      clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    }
+    .btn-large.primary { background: var(--accent); color: #fff; border: none; }
+    .btn-large.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-large.ghost:hover { border-color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 4rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; }
+    .footer-logo span { color: var(--accent); }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { color: var(--muted); font-size: 0.72rem; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeLeft {
+      from { opacity: 0; transform: translateX(24px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    /* scroll reveal */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* responsive */
+    @media (max-width: 1024px) {
+      .hero-stats { display: none; }
+      .topics-grid { grid-template-columns: repeat(2, 1fr); }
+      .roadmap-wrapper { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.5rem 4rem; }
+      .section-inner { padding: 3.5rem 1.5rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .topics-header { grid-template-columns: 1fr; gap: 1.5rem; }
+      .topics-grid { grid-template-columns: repeat(2, 1fr); }
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Career<span>Forge</span></div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#topics">Topics</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#testimonials">Stories</a>
+      <a href="https://github.com" target="_blank">GitHub</a>
+    </div>
+    <button class="nav-cta">Start Preparing</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Placement Preparation Portal</div>
+      <h1 class="hero-title">
+        Forge Your<br>
+        <span class="line2">Dream Career</span><br>
+        <span class="line3">from scratch.</span>
+      </h1>
+      <p class="hero-sub">
+        A comprehensive, open-source platform to crack top product companies.
+        Master DSA, system design, aptitude & HR — all in one place.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary">Start Your Journey →</button>
+        <button class="btn-secondary">⭐ Star on GitHub</button>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <span class="stat-num">500+</span>
+        <span class="stat-label">DSA Problems</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">50+</span>
+        <span class="stat-label">Company Guides</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">10k+</span>
+        <span class="stat-label">Students Placed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPANIES STRIP -->
+  <div class="companies-strip">
+    <div class="cs-label">Preparation resources for top companies</div>
+    <div class="marquee-wrap">
+      <div class="marquee">
+        <span class="company-name">Google</span>
+        <span class="company-name">Amazon</span>
+        <span class="company-name">Microsoft</span>
+        <span class="company-name">Flipkart</span>
+        <span class="company-name">Adobe</span>
+        <span class="company-name">Infosys</span>
+        <span class="company-name">TCS</span>
+        <span class="company-name">Wipro</span>
+        <span class="company-name">Paytm</span>
+        <span class="company-name">Swiggy</span>
+        <span class="company-name">Zomato</span>
+        <span class="company-name">Razorpay</span>
+        <!-- duplicate for seamless loop -->
+        <span class="company-name">Google</span>
+        <span class="company-name">Amazon</span>
+        <span class="company-name">Microsoft</span>
+        <span class="company-name">Flipkart</span>
+        <span class="company-name">Adobe</span>
+        <span class="company-name">Infosys</span>
+        <span class="company-name">TCS</span>
+        <span class="company-name">Wipro</span>
+        <span class="company-name">Paytm</span>
+        <span class="company-name">Swiggy</span>
+        <span class="company-name">Zomato</span>
+        <span class="company-name">Razorpay</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features-bg" id="features">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-tag">// What we offer</div>
+        <h2 class="section-title">Everything you need to <em>get placed</em></h2>
+      </div>
+      <div class="features-grid reveal" style="transition-delay:0.1s">
+        <div class="feature-card">
+          <div class="feat-icon">🧩</div>
+          <div class="feat-title">Data Structures & Algorithms</div>
+          <div class="feat-desc">500+ curated problems with step-by-step solutions, time complexity analysis, and video explanations organized by topic and difficulty.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon">🏗️</div>
+          <div class="feat-title">System Design</div>
+          <div class="feat-desc">Real-world case studies: design Twitter, Netflix, Uber. Learn scalability patterns, CAP theorem, databases, and microservices.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon">🔢</div>
+          <div class="feat-title">Aptitude & Reasoning</div>
+          <div class="feat-desc">Quantitative aptitude, logical reasoning, and verbal ability with timed mock tests matching actual placement exam patterns.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon">🎤</div>
+          <div class="feat-title">HR Interview Prep</div>
+          <div class="feat-desc">200+ common HR questions with model answers, behavioral frameworks (STAR method), and company-specific research guides.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon">🗺️</div>
+          <div class="feat-title">Personalized Roadmap</div>
+          <div class="feat-desc">A structured week-by-week study plan tailored to your target companies, current skill level, and available preparation time.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon">📄</div>
+          <div class="feat-title">Resume & Portfolio</div>
+          <div class="feat-desc">ATS-optimized resume templates, project presentation guides, GitHub profile tips, and portfolio review checklists.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOPICS -->
+  <section id="topics">
+    <div class="section-inner">
+      <div class="topics-header reveal">
+        <div>
+          <div class="section-tag">// Topic library</div>
+          <h2 class="section-title">Deep-dive into <em>every topic</em></h2>
+        </div>
+        <p class="section-desc">From beginner to advanced — every concept you need to crack technical interviews at product-based companies.</p>
+      </div>
+      <div class="topics-grid reveal" style="transition-delay:0.1s">
+        <div class="topic-pill hot">
+          <div class="topic-badge">Hot</div>
+          <div class="topic-icon">🌲</div>
+          <div class="topic-name">Trees & Graphs</div>
+          <div class="topic-count">78 problems</div>
+        </div>
+        <div class="topic-pill">
+          <div class="topic-icon">⚡</div>
+          <div class="topic-name">Dynamic Programming</div>
+          <div class="topic-count">65 problems</div>
+        </div>
+        <div class="topic-pill">
+          <div class="topic-icon">🔗</div>
+          <div class="topic-name">Linked Lists</div>
+          <div class="topic-count">42 problems</div>
+        </div>
+        <div class="topic-pill hot">
+          <div class="topic-badge">Hot</div>
+          <div class="topic-icon">🪟</div>
+          <div class="topic-name">Sliding Window</div>
+          <div class="topic-count">30 problems</div>
+        </div>
+        <div class="topic-pill">
+          <div class="topic-icon">🗂️</div>
+          <div class="topic-name">Stacks & Queues</div>
+          <div class="topic-count">35 problems</div>
+        </div>
+        <div class="topic-pill">
+          <div class="topic-icon">🔍</div>
+          <div class="topic-name">Binary Search</div>
+          <div class="topic-count">28 problems</div>
+        </div>
+        <div class="topic-pill">
+          <div class="topic-icon">🔃</div>
+          <div class="topic-name">Sorting Algorithms</div>
+          <div class="topic-count">20 problems</div>
+        </div>
+        <div class="topic-pill">
+          <div class="topic-icon">🧮</div>
+          <div class="topic-name">Bit Manipulation</div>
+          <div class="topic-count">22 problems</div>
+        </div>
+        <div class="topic-pill">
+          <div class="topic-icon">📦</div>
+          <div class="topic-name">Arrays & Strings</div>
+          <div class="topic-count">90 problems</div>
+        </div>
+        <div class="topic-pill">
+          <div class="topic-icon">🔑</div>
+          <div class="topic-name">Hashing</div>
+          <div class="topic-count">38 problems</div>
+        </div>
+        <div class="topic-pill">
+          <div class="topic-icon">🔀</div>
+          <div class="topic-name">Recursion & Backtracking</div>
+          <div class="topic-count">45 problems</div>
+        </div>
+        <div class="topic-pill">
+          <div class="topic-icon">🌐</div>
+          <div class="topic-name">OS & Networking</div>
+          <div class="topic-count">60 theory Q&A</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="roadmap-bg" id="roadmap">
+    <div class="section-inner">
+      <div class="roadmap-wrapper">
+        <div>
+          <div class="section-tag reveal">// Structured path</div>
+          <h2 class="section-title reveal" style="transition-delay:0.05s">Your <em>60-day</em> placement roadmap</h2>
+          <div class="roadmap-steps reveal" style="transition-delay:0.1s">
+            <div class="step active">
+              <div class="step-num">01</div>
+              <div class="step-info">
+                <div class="step-title">Foundation Bootcamp</div>
+                <div class="step-sub">Arrays, strings, time complexity</div>
+                <div class="step-duration">Week 1–2</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">02</div>
+              <div class="step-info">
+                <div class="step-title">Core DSA Mastery</div>
+                <div class="step-sub">Trees, graphs, DP, backtracking</div>
+                <div class="step-duration">Week 3–5</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">03</div>
+              <div class="step-info">
+                <div class="step-title">System Design Crash Course</div>
+                <div class="step-sub">HLD, LLD, case studies</div>
+                <div class="step-duration">Week 6–7</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">04</div>
+              <div class="step-info">
+                <div class="step-title">Mock Interviews & Review</div>
+                <div class="step-sub">Timed practice, HR prep, resume</div>
+                <div class="step-duration">Week 8</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="roadmap-visual reveal" style="transition-delay:0.2s">
+          <div class="rv-header">
+            <div class="rv-title">Week 1–2 Progress</div>
+            <div class="rv-badge">Active Phase</div>
+          </div>
+          <div class="progress-item">
+            <div class="pi-header"><span class="pi-label">Arrays & Strings</span><span class="pi-val">18/20</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="width:90%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="pi-header"><span class="pi-label">Time Complexity</span><span class="pi-val">12/15</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="pi-header"><span class="pi-label">Sorting Basics</span><span class="pi-val">8/10</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="pi-header"><span class="pi-label">Recursion Intro</span><span class="pi-val">5/12</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="width:42%"></div></div>
+          </div>
+          <div class="rv-checklist">
+            <div class="check-item done"><div class="ck">✓</div><span class="ct">Set up coding environment</span></div>
+            <div class="check-item done"><div class="ck">✓</div><span class="ct">Complete 50-problem warm-up</span></div>
+            <div class="check-item done"><div class="ck">✓</div><span class="ct">Understand Big-O notation</span></div>
+            <div class="check-item"><div class="ck"></div><span class="ct">Master two-pointer technique</span></div>
+            <div class="check-item"><div class="ck"></div><span class="ct">Finish recursion module</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-tag">// Success stories</div>
+        <h2 class="section-title">Placed at <em>top companies</em></h2>
+      </div>
+      <div class="testimonials-grid reveal" style="transition-delay:0.1s">
+        <div class="testi-card">
+          <div class="testi-quote">The system design section alone helped me crack 3 rounds at Amazon. The structured roadmap removed all guesswork from my preparation.</div>
+          <div class="testi-author">
+            <div class="testi-avatar">AS</div>
+            <div>
+              <div class="testi-name">Aarav Sharma</div>
+              <div class="testi-role">SDE-1 @</div>
+              <div class="testi-company">Amazon</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-quote">The 500+ DSA problems with detailed explanations are unmatched. I went from struggling with trees to solving hard graph problems in 3 weeks.</div>
+          <div class="testi-author">
+            <div class="testi-avatar">PK</div>
+            <div>
+              <div class="testi-name">Priya Kapoor</div>
+              <div class="testi-role">Software Engineer @</div>
+              <div class="testi-company">Microsoft</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-quote">CareerForge's HR prep module gave me the confidence to ace behavioral rounds. The STAR method templates were incredibly practical.</div>
+          <div class="testi-author">
+            <div class="testi-avatar">RM</div>
+            <div>
+              <div class="testi-name">Rohan Mehta</div>
+              <div class="testi-role">Associate Engineer @</div>
+              <div class="testi-company">Flipkart</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-inner reveal">
+      <h2 class="cta-title">Ready to <em>forge</em> your future?</h2>
+      <p class="cta-sub">Join thousands of students already preparing with CareerForge. Open source, completely free, built by the community.</p>
+      <div class="cta-btn-group">
+        <button class="btn-large primary">Get Started Free →</button>
+        <button class="btn-large ghost">View on GitHub</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Career<span>Forge</span></div>
+    <div class="footer-links">
+      <a href="#">Docs</a>
+      <a href="#">Contributing</a>
+      <a href="#">Issues</a>
+      <a href="#">License</a>
+    </div>
+    <div class="footer-copy">MIT License · Open Source</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Roadmap step toggle
+    const steps = document.querySelectorAll('.step');
+    steps.forEach(s => {
+      s.addEventListener('click', () => {
+        steps.forEach(x => x.classList.remove('active'));
+        s.classList.add('active');
+      });
+    });
+
+    // Topic pill hover
+    document.querySelectorAll('.topic-pill').forEach(p => {
+      p.addEventListener('click', () => {
+        p.style.borderColor = 'var(--accent)';
+        setTimeout(() => p.style.borderColor = '', 600);
+      });
+    });
+  </script>
+</body>
+</html>
